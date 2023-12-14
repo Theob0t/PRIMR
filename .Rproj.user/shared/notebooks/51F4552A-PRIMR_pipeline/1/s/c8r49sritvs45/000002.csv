@@ -1,0 +1,30 @@
+"0","runPRIMR(out=out, bamfile=bamfile, ampfile=ampfile,sample.id=sample.id,nthreads=nthreads)
+"
+"1","[1]"
+"1"," ""PRIMER V.0.1.0"""
+"1","
+"
+"1","----------Runnning PRIMR----------
+
+------Filtering by Amplicon-------
+"
+"1","KRT4
+"
+"2","[bam_sort_core] merging from 0 files and 40 in-memory blocks...
+"
+"1","KRT7
+"
+"1","KRT13
+"
+"1","KRT15
+"
+"2","[bam_sort_core] merging from 0 files and 40 in-memory blocks...
+"
+"1","KRT23
+"
+"1","------Merging Filtered Reads------
+"
+"1","------Filtering Original BAM------
+"
+"1","--------------DONE !--------------
+"

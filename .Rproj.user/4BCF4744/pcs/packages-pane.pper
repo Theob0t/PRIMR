@@ -1,0 +1,7 @@
+{
+    "installOptions" : {
+        "installDependencies" : true,
+        "installFromRepository" : true,
+        "libraryPath" : "/gpfs/commons/home/tbotella/R/x86_64-conda-linux-gnu-library/4.2"
+    }
+}

@@ -1,0 +1,28 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1702595338622.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "B016CFA",
+    "lastKnownWriteTime" : 1702596938,
+    "last_content_update" : 1702596938799,
+    "path" : "~/PRIMR/vignettes/PRIMR_pipeline.Rmd",
+    "project_path" : "vignettes/PRIMR_pipeline.Rmd",
+    "properties" : {
+        "cursorPosition" : "51,0",
+        "last_setup_crc32" : "a0abc6793dfde0c7",
+        "scrollLine" : "35",
+        "tempName" : "Untitled1",
+        "working_dir" : "current"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

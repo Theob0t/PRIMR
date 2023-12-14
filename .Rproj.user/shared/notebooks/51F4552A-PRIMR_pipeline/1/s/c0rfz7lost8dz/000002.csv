@@ -1,0 +1,20 @@
+"0","library(PRIMR)"
+"0",""
+"0","library(dplyr)"
+"2","package ‘dplyr’ was built under R version 4.3.2"
+"2","
+Attaching package: ‘dplyr’
+
+"
+"2","The following objects are masked from ‘package:stats’:
+
+    filter, lag
+
+"
+"2","The following objects are masked from ‘package:base’:
+
+    intersect, setdiff, setequal, union
+
+"
+"0","library(reshape2)"
+"2","package ‘reshape2’ was built under R version 4.3.2"

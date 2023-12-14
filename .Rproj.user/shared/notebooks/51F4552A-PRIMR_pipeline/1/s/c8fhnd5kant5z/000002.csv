@@ -1,0 +1,8 @@
+"0","qnames.path=paste0(out,'/',sample.id,'/filtered_qnames/qnames_',sample.id,'.txt')"
+"0","format='seurat'"
+"0",""
+"0","countReads(out=out, qnames.path=qnames.path, sample.id=sample.id, format=format)"
+"1","[1]"
+"1"," ""----SAVING COUNTS MATRIX----"""
+"1","
+"
