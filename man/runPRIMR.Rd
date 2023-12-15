@@ -24,7 +24,7 @@ runPRIMR(
 \item{nthreads}{Integer indicating the number of threads to use for parallel processing}
 }
 \value{
-a BAM file per amplicon in the BED file
+Create a folder with the reads that pass PRIMR QC, a filtered BAM file, a barplot as pdf for read counts pre/post filtering and a tmp folder with all intermediate files
 }
 \description{
 Split the original BAM file into amplicons using a amplicon file
