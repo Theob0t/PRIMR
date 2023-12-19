@@ -41,7 +41,7 @@ library(ggplot2)
 ```{r, eval = TRUE}
 out='/gpfs/commons/home/tbotella/missionbio/primr_package/data'
 bamfile='/gpfs/commons/home/tbotella/missionbio/primr_package/data/datatest.bam'
-ampfile='/gpfs/commons/home/tbotella/missionbio/primr_package/data/ampliconsPanel.txt'
+ampfile='/gpfs/commons/home/tbotella/missionbio/primr_package/data/ampliconsPanel_all.txt'
 sample.id='Sample1'
 nthreads=40
 ```
@@ -52,7 +52,6 @@ nthreads=40
 ```{r, eval = TRUE}
 runPRIMR(out=out, bamfile=bamfile, ampfile=ampfile,sample.id=sample.id,nthreads=nthreads)
 ```
-
 
 ## countReads
 

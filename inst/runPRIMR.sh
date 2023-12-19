@@ -2,7 +2,7 @@
 
 #TO-DO
 #Check if samtools/1.19 is installed
-#Add option to keep tmp folder
+#Add option to delete tmp folder
 
 out=$1
 bamfile=$2
@@ -30,17 +30,35 @@ echo "------Filtering by Amplicon-------"
 
 while read line; do
 
-        region=$(echo ${line} | awk '{print $1":"$2"-"$3}')
-        gene=$(echo ${line} | awk '{print $7}')
-        name=${sample_id}'_'${gene}
-        strand=$(echo ${line} | awk '{print $8}')
-        samtools view -hb ${bamfile} ${region} -@ ${nthreads} -o ${out}/${name}.bam
-        #samtools sort -n ${out}/${name}.bam -@ ${nthreads} -o ${out}/${name}.bam
-        samtools sort -N ${out}/${name}.bam -@ ${nthreads} -o ${out}/${name}.bam # lexicographical ordering to match bash join default
+        strand=$(awk '{print $8}' <<< "${line}")
+        gene=$(awk '{print $7}' <<< "${line}")
+        name="${sample_id}_${gene}"
+
+        if [ "${strand}" == "+" ]; then
+            region=$(awk '{print $1 ":" $2 "-" $5}' <<< "${line}")
+        else
+            if [ "${strand}" == "-" ]; then
+                region=$(awk '{print $1 ":" $4 "-" $3}' <<< "${line}")
+            else
+                echo "Invalid value for strand: ${strand}. Strand should be + or -"
+                exit 1
+            fi
+        fi
+
+        echo "Extracting reads from ${gene} : ${region}"
+
+        samtools view -hb "${bamfile}" "${region}" -@ "${nthreads}" -o "${out}/${name}.bam"
+        # samtools sort -n "${out}/${name}.bam" -@ "${nthreads}" -o "${out}/${name}.bam"
+        samtools sort -N "${out}/${name}.bam" -@ "${nthreads}" -o "${out}/${name}.bam" # lexicographical ordering to match bash join default
+#
+#         gene=$(echo ${line} | awk '{print $7}')
+#         name=${sample_id}'_'${gene}
+#         strand=$(echo ${line} | awk '{print $8}')
+#         samtools view -hb ${bamfile} ${region} -@ ${nthreads} -o ${out}/${name}.bam
+#         #samtools sort -n ${out}/${name}.bam -@ ${nthreads} -o ${out}/${name}.bam
+#         samtools sort -N ${out}/${name}.bam -@ ${nthreads} -o ${out}/${name}.bam # lexicographical ordering to match bash join default
 
         file=${out}/${name}.bam
-
-        echo ${gene}
 
         samtools view ${file} -@ ${nthreads} | awk -f ${awk_script} > ${out}/corrected_${gene}.bed
 
@@ -52,11 +70,18 @@ while read line; do
         awk -v r1=${r1} -v r2=${r2} '{if ($5 == 99 || $5 == 83) print > r1; else if ($5 == 147 || $5 == 163) print > r2}' ${input}
 
         LC_ALL=C join -j 4 ${r1} ${r2} > ${output}
+        #join -j 4 ${r1} ${r2} > ${output}
 
-        amp1_start=$(echo ${line} | awk '{print $2}')
-        amp1_end=$(echo ${line} | awk '{print $3}')
-        amp2_start=$(echo ${line} | awk '{print $4}')
-        amp2_end=$(echo ${line} | awk '{print $5}')
+        # amp1_start=$(echo ${line} | awk '{print $2}')
+        # amp1_end=$(echo ${line} | awk '{print $3}')
+        # amp2_start=$(echo ${line} | awk '{print $4}')
+        # amp2_end=$(echo ${line} | awk '{print $5}')
+
+        amp1_start=$(awk '{print $2}' <<< "${line}")
+        amp1_end=$(awk '{print $3}' <<< "${line}")
+        amp2_start=$(awk '{print $4}' <<< "${line}")
+        amp2_end=$(awk '{print $5}' <<< "${line}")
+
 
         file=${output}
         output=${out_qnames}/${gene}_qnames.txt
@@ -118,8 +143,10 @@ echo "------Merging Filtered Reads------"
 
 cat ${out_qnames}/*qnames.txt > ${out_qnames}/qnames_${sample_id}.txt
 
+cut -d : -f -9 ${out_qnames}/qnames_${sample_id}.txt > ${out_qnames}/qnames_bam_${sample_id}.txt
+
 echo "------Filtering Original BAM------"
-samtools view ${bamfile} -@ ${nthreads} --qname-file ${out_qnames}/qnames_${sample_id}.txt -o ${out_finalbam}/${sample_id}_PRIMR_filtered.bam
+samtools view ${bamfile} -@ ${nthreads} --qname-file ${out_qnames}/qnames_bam_${sample_id}.txt -o ${out_finalbam}/${sample_id}_PRIMR_filtered.bam
 
 echo "--------------DONE !--------------"
 
