@@ -14,7 +14,7 @@
 
 countReads = function(out = '/path.to.ouput.dir/',
                       qnames.path = '/path.to.qnames/',
-                      format = 'both',
+                      format = 'seurat',
                       sample.id = 'test_small') {
   if (!file.exists(paste0(out, '/', sample.id))) {
     stop("The qnames file does not exist: ", out)
@@ -35,6 +35,12 @@ countReads = function(out = '/path.to.ouput.dir/',
   # replace NAs (0 reads/barcodes) in the counts matrix by 0
   counts[is.na(counts)] <- 0
 
+  # Check if a row (droplet) sums to 0 (no reads)
+  zero_sum_rows <- rowSums(counts) == 0
+
+  # Remove empty rows (droplet)
+  counts <- counts[!zero_sum_rows, ]
+
   # make V9 (barcodes) the row names and delete V9
   counts <- data.frame(counts, row.names = counts$`counts$V9`)
 
@@ -42,20 +48,33 @@ countReads = function(out = '/path.to.ouput.dir/',
   counts$counts.V9 = NULL
 
   print('----SAVING COUNTS MATRIX----')
+
+  # gene x cells matrix
+  tcounts = t(counts)
+
   if (format == 'both') {
     write.csv(counts,
               paste0(out, '/', sample.id, '_cellxgene.csv'),
               row.names = TRUE)
-    write.csv(t(counts),
+    saveRDS(counts,paste0(out, '/', sample.id, '_cellxgene.Rds'))
+
+    write.csv(tcounts,
               paste0(out, '/', sample.id, '_genexcell.csv'),
               row.names = TRUE)
+    saveRDS(tcounts,paste0(out, '/', sample.id, '_genexcell.Rds'))
+
+
   } else if (format == 'seurat') {
-    write.csv(t(counts),
+    write.csv(tcounts,
               paste0(out, '/', sample.id, '_genexcell.csv'),
               row.names = TRUE)
+    saveRDS(tcounts,paste0(out, '/', sample.id, '_genexcell.Rds'))
+
   } else if (format == 'anndata') {
     write.csv(counts,
               paste0(out, '/', sample.id, '_cellxgene.csv'),
               row.names = TRUE)
+    saveRDS(counts,paste0(out, '/', sample.id, '_cellxgene.Rds'))
+
   }
 }
